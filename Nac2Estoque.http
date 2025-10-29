@@ -1,0 +1,6 @@
+@Nac2Estoque_HostAddress = http://localhost:5106
+
+GET {{Nac2Estoque_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
