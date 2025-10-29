@@ -1,23 +1,31 @@
 using Microsoft.EntityFrameworkCore;
-using nac2_estoque.Data;
-using nac2_estoque.Services;
+using Nac2Estoque.Data;
+using Nac2Estoque.Repositories;
+using Nac2Estoque.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//banco em memória
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("EstoqueDB"));
-
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ProdutoService>();
-builder.Services.AddScoped<MovimentacaoService>();
-builder.Services.AddScoped<RelatorioService>();
+// Configurar banco de dados InMemory
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseInMemoryDatabase("Nac2EstoqueDb"));
+
+// Repositories
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IMovimentacaoRepository, MovimentacaoRepository>();
+
+// Services
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<IMovimentacaoService, MovimentacaoService>();
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,4 +35,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
